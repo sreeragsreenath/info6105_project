@@ -1,6 +1,7 @@
 from flask import Flask, escape, request, render_template
 import pickle
 from sklearn.preprocessing import MultiLabelBinarizer
+import wikipedia
 
 app = Flask(__name__)
 
