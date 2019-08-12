@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block head %}
+<div class="container">
+ <div class="row">
+  <div class="col s12 m12">
+   <div class="card-panel">
+    <h1>Movie Predictor</h1>
+    <hr>
+    <div class="row">
+     <form class="col s12" action="/predict_movie_name" method="post">
+      <div class="row">
+       <div class="input-field col s12">
+        <textarea id="textarea1" class="materialize-textarea" name="movie_name"></textarea>
+        <label for="textarea1">Enter Movie Name</label>
+      </div>
+      <div class="input-field col s12">
+       <button class="btn waves-effect waves-light" type="button" name="action">Submit
+        <i class="material-icons right">send</i>
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12">
+      <table id="myTable" >
+        <thead>
+          <tr>
+            <th>Movie Name</th>
+            <th>Movie Plot</th>
+            <th>Tags</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+  $(function() {
+    $('button').click(function() {
+        $.ajax({
+            url: '/predict_movie_name',
+            data: $('form').serialize(),
+            type: 'POST',
+            success: function(response) {
+                $("#textarea1").val('');
+                var blob = response['blob'];
+                var tags = response['tags'];
+                var movie_name = response['movie_name'];
+                var tags_string = '</td><td>'
+                for (var t in tags) {
+                  tags_string += ' <a class="waves-effect waves-light blue btn">'+tags[t]+'</a>  ';
+                }
+                tags_string='<tr><td>'+movie_name+'</td><td>'+blob+tags_string+'</td></tr>';
+                $('#myTable').prepend(tags_string);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
